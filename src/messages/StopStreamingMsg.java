@@ -1,12 +1,9 @@
 package messages;
 
-import actors.Consumer;
+import kafka.Consumer;
 
 public class StopStreamingMsg {
 	private Consumer consumer;
-	private String bootstrapAddress;
-	private String topic;
-	private String consumerID;
 	
 	public StopStreamingMsg(Consumer consumer) {
 		this.consumer = consumer;

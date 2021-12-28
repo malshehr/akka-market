@@ -1,4 +1,4 @@
-package actors;
+package main;
 
 public class Quote {
 
