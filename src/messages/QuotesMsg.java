@@ -2,14 +2,18 @@ package messages;
 
 import java.util.Hashtable;
 
+
 public class QuotesMsg {
-	private Hashtable<String, Integer> quotes; // receives information of company -> current quote price
+	private Hashtable<String, Float> quotes; // receives information of company -> current quote price
 	
-	public QuotesMsg() { // figure out how you want to store the key value pairs.. look into kafka streams
-		
+	public QuotesMsg(String[] quotes) { // look into kafka streams
+		this.quotes = new Hashtable<String, Float>();
+		for(int i = 0; i < quotes.length; i+=2) {
+			this.quotes.put(quotes[i], Float.valueOf(quotes[i+1]));
+		}
 	}
 	
-	public Hashtable<String, Integer> getQuotes() {
+	public Hashtable<String, Float> getQuotes() {
 		return quotes;
 	}
 }

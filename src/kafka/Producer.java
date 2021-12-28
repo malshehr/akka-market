@@ -30,7 +30,7 @@ public class Producer {
 			 for(int i =  0; i < quotes.size(); i++) {
 				 quoteEnc.append(quotes.get(i).getCompany() + " " + quotes.get(i).getValue() + " ");
 			 }
-		     producer.send(new ProducerRecord<String, String>(topic, new String(quoteEnc))); // testing testing
+		     producer.send(new ProducerRecord<String, String>(topic, new String(quoteEnc)));
 
 		 }
 	}

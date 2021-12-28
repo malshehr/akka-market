@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import akka.actor.ActorRef;
+import messages.QuotesMsg;
 
  // class used by kafkastreamer Actor to receive data from Kafka topic
 public class Consumer {
@@ -33,11 +34,10 @@ public class Consumer {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) { // decode message here
             	String[] quotes = record.value().split("\\s+");
-            	for(int i = 0; i < quotes.length; i+=2) {
-            		System.out.printf("Company: %s Price: %s%n", quotes[i], quotes[i+1]);
+            	QuotesMsg msg = new QuotesMsg(quotes);
+            	for(ActorRef act: receivers) {
+            		act.tell(msg, ActorRef.noSender());
             	}
-            	// send the data as msgs to other Actors, msg is Hashtable of information
-            	//receivers[i].tell(null, ActorRef.noSender());
             }
                 
         }
