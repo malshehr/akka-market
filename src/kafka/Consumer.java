@@ -14,7 +14,7 @@ import messages.QuotesMsg;
  // class used by kafkastreamer Actor to receive data from Kafka topic
 public class Consumer {
 	private KafkaConsumer<String, String> consumer;
-	private boolean flag  = true; // to be used for turning the consumer on/off, could pass boolean from main for easy access
+	private boolean flag  = true; // to be used for turning the consumer on/off
 	
 	// look into kafka streams for this method
 	public void consumerStart(String address, String topic, String consumerID, ActorRef[] receivers) {
@@ -36,6 +36,7 @@ public class Consumer {
             	String[] quotes = record.value().split("\\s+");
             	QuotesMsg msg = new QuotesMsg(quotes);
             	for(ActorRef act: receivers) {
+            		// msg could contain average cost everytime it processes from streamer
             		act.tell(msg, ActorRef.noSender());
             	}
             }

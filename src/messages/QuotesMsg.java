@@ -1,19 +1,19 @@
 package messages;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 
 public class QuotesMsg {
-	private Hashtable<String, Float> quotes; // receives information of company -> current quote price
+	private HashMap<String, Float> quotes; // receives information of company -> current quote price
 	
 	public QuotesMsg(String[] quotes) { // look into kafka streams
-		this.quotes = new Hashtable<String, Float>();
+		this.quotes = new HashMap<String, Float>();
 		for(int i = 0; i < quotes.length; i+=2) {
 			this.quotes.put(quotes[i], Float.valueOf(quotes[i+1]));
 		}
 	}
 	
-	public Hashtable<String, Float> getQuotes() {
+	public HashMap<String, Float> getQuotes() {
 		return quotes;
 	}
 }
