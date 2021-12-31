@@ -20,7 +20,7 @@ public class KafkaStreamer extends AbstractActor{
 				.match(StopStreamingMsg.class, this::stopStreaming)
 				.build();
 	}
-	public void startStreaming(StartStreamingMsg msg) {
+	private void startStreaming(StartStreamingMsg msg) {
 		Consumer consumer = msg.getConsumer();
 		String address = msg.getAddress();
 		String topic = msg.getTopic();

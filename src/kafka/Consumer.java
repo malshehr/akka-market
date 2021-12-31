@@ -36,7 +36,6 @@ public class Consumer {
             	String[] quotes = record.value().split("\\s+");
             	QuotesMsg msg = new QuotesMsg(quotes);
             	for(ActorRef act: receivers) {
-            		// msg could contain average cost everytime it processes from streamer
             		act.tell(msg, ActorRef.noSender());
             	}
             }

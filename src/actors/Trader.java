@@ -3,7 +3,10 @@ package actors;
 import java.util.HashMap;
 
 import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
 import akka.actor.Props;
+import messages.AssignAuditMsg;
+import messages.PurchaseMsg;
 import messages.QuotesMsg;
 
 public class Trader extends AbstractActor {
@@ -13,16 +16,24 @@ public class Trader extends AbstractActor {
 	private HashMap<String, Integer> ownedQuotes = new HashMap<String, Integer>();
 	private HashMap<String, Float> totalCost = new HashMap<String, Float>();
 	private int messagesCounter = 0;
+	private ActorRef audit;
 
 	public static Props props() {
 		return Props.create(Trader.class);
 	}
 
 	public Receive createReceive() {
-		return receiveBuilder().match(QuotesMsg.class, this::trade).build();
+		return receiveBuilder()
+				.match(QuotesMsg.class, this::trade)
+				.match(AssignAuditMsg.class, this::assignAudit)
+				.build();
+	}
+	
+	private void assignAudit(AssignAuditMsg msg) {
+		audit = msg.getAudit();
 	}
 
-	public void trade(QuotesMsg msg) {
+	private void trade(QuotesMsg msg) {
 		messagesCounter++;
 		quotes = msg.getQuotes();
 		for (String company : quotes.keySet()) {
@@ -43,12 +54,13 @@ public class Trader extends AbstractActor {
 				if (wallet > quotes.get(company)) {
 					wallet -= quotes.get(company);
 					// send message to Audit
+					PurchaseMsg msg = new PurchaseMsg(getSelf().path().name(), company, quotes.get(company), wallet);
+					audit.tell(msg, ActorRef.noSender());
 					if(ownedQuotes.get(company) == null) {
 						ownedQuotes.put(company, 1);
 					} else {
 						ownedQuotes.put(company, ownedQuotes.get(company) + 1);
 					}
-				//	System.out.println("Bought quote from " + company + " for " + quotes.get(company) + "$");
 				}
 			}
 			// sell
