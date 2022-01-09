@@ -8,6 +8,7 @@ import akka.actor.Props;
 import messages.AssignAuditMsg;
 import messages.PurchaseMsg;
 import messages.QuotesMsg;
+import messages.SellMsg;
 
 public class Trader extends AbstractActor {
 
@@ -68,7 +69,10 @@ public class Trader extends AbstractActor {
 			for(String company: quotes.keySet()) {
 				// sell with a profit
 				if(quotes.get(company) > totalCost.get(company)/messagesCounter || wallet > 1000f) {
-					wallet += quotes.get(company)*ownedQuotes.get(company);
+					float earnings = quotes.get(company)*ownedQuotes.get(company);
+					wallet += earnings;
+					SellMsg msg = new SellMsg(getSelf().path().name(), company, quotes.get(company), wallet, earnings);
+					audit.tell(msg, ActorRef.noSender());
 					System.out.println(this.context().self().path().name() + " sold " + company + " quotes for a total of " 
 					+ quotes.get(company)*ownedQuotes.get(company) +  "$ when the average price of a single quote is " + totalCost.get(company)/messagesCounter + "$");
 					//System.out.println("Wallet " + wallet);
@@ -78,4 +82,8 @@ public class Trader extends AbstractActor {
 		}
 
 	}
+	
+	// more traders logic here
+	
+	
 }

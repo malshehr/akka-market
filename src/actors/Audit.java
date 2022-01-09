@@ -67,7 +67,20 @@ public class Audit extends AbstractActor {
 	}
 
 	private void sell(SellMsg msg) {
-
+		String trader = "'" + msg.getTrader() + "'";
+		String company = "'" + msg.getCompany() + "'";
+		float price = msg.getPrice();
+		float wallet = msg.getWallet();
+		float earnings = msg.getEarnings();
+		
+		try {
+			Statement sellSql = conn.createStatement();
+			sellSql.executeUpdate("INSERT INTO sells VALUES (" + trader + ", " + company + ", " +  price + ", " + wallet + ", " + earnings + ");");
+			sellSql.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
