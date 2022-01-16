@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Properties;
 
 import akka.actor.AbstractActor;
@@ -52,13 +54,16 @@ public class Audit extends AbstractActor {
 	}
 
 	private void purchase(PurchaseMsg msg) {
+		String timeStamp = "'" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()) + "'";
 		String trader = "'" + msg.getTrader() + "'";
 		String company = "'" + msg.getCompany() + "'";
+		String style = "'" + msg.getTradingStyle().name() + "'";
 		float price = msg.getPrice();
-		float wallet = msg.getWallet();
+		
 		try {
 			Statement purchaseSql = conn.createStatement();
-			purchaseSql.executeUpdate("INSERT INTO purchases VALUES (" + trader + ", " + company + ", " +  price + ", " + wallet + ");");
+			purchaseSql.executeUpdate("INSERT INTO purchases VALUES (" + trader + ", " + company + ", " +  price + ", " + timeStamp + ", " +
+			style + ");");
 			purchaseSql.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,15 +72,17 @@ public class Audit extends AbstractActor {
 	}
 
 	private void sell(SellMsg msg) {
+		String timeStamp = "'" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()) + "'";
 		String trader = "'" + msg.getTrader() + "'";
 		String company = "'" + msg.getCompany() + "'";
+		String style = "'" + msg.getTradingStyle().name() + "'";
 		float price = msg.getPrice();
-		float wallet = msg.getWallet();
 		float earnings = msg.getEarnings();
 		
 		try {
 			Statement sellSql = conn.createStatement();
-			sellSql.executeUpdate("INSERT INTO sells VALUES (" + trader + ", " + company + ", " +  price + ", " + wallet + ", " + earnings + ");");
+			sellSql.executeUpdate("INSERT INTO sells VALUES (" + trader + ", " + company + ", " +  price + ", " + earnings + ", " + timeStamp + ", " +
+			style + ");");
 			sellSql.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

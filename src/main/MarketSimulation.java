@@ -26,13 +26,13 @@ public class MarketSimulation {
         
         ActorRef[] receivers = new ActorRef[5];
         AssignAuditMsg assignAudit = new AssignAuditMsg(auditActor);
-        for(int i = 0; i < 5; i++) {
-        	ActorRef trader = simulation.actorOf(Trader.props(), "Trader" +i);
+        for(int i = 0; i < receivers.length; i++) {
+        	ActorRef trader = simulation.actorOf(Trader.props(), "Trader" + i);
         	trader.tell(assignAudit, ActorRef.noSender()); // inform the trader of its audit
         	receivers[i] = trader;
         }
         
-        StartAuditMsg db = new StartAuditMsg("whatever", "whatever", "market"); // use your configuration
+        StartAuditMsg db = new StartAuditMsg("root", "whatever", "whatever"); // use your configuration
         StartStreamingMsg st = new StartStreamingMsg("localhost:9092", "market", "console-consumer-58236", receivers); // pass list of traders 
         ProduceQuotesMsg pq = new ProduceQuotesMsg("localhost:9092", "market"); // testing
 

@@ -1,18 +1,20 @@
 package messages;
 
+import main.TradingStyle;
+
 public class PurchaseMsg {
 
 	
 	private String trader;
 	private String company;
 	private float price;
-	private float wallet;
+	private TradingStyle style;
 	
-	public PurchaseMsg(String trader, String company, float price, float wallet) {
+	public PurchaseMsg(String trader, String company, float price, TradingStyle style) {
 		this.trader = trader;
 		this.company = company;
 		this.price = price;
-		this.wallet = wallet;
+		this.style = style;
 	}
 	
 	public String getTrader() {
@@ -27,7 +29,7 @@ public class PurchaseMsg {
 		return price;
 	}
 	
-	public float getWallet() {
-		return wallet;
+	public TradingStyle getTradingStyle() {
+		return style;
 	}
 }
